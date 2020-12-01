@@ -18,8 +18,8 @@ class Day1 : Day(1) {
 
     @Throws
     override fun partTwo(): Any {
-        for (expense1 in expenses) {
-            for (expense2 in expenses) {
+        for ((index, expense1) in expenses.withIndex()) {
+            for (expense2 in expenses.drop(index)) {
                 if (expenses.contains(target - expense1 - expense2)) return expense1 * expense2 * (target - expense1 - expense2)
             }
         }
