@@ -6,9 +6,9 @@ import org.hamcrest.core.IsInstanceOf.instanceOf
 import org.hamcrest.core.IsNull.notNullValue
 import org.junit.Test
 
-class Day1Test {
+class Day2Test {
 
-    private val dayOne = Day1()
+    private val dayOne = Day2()
 
     @Test
     fun testPartOne() {
@@ -17,6 +17,6 @@ class Day1Test {
 
     @Test
     fun testPartTwo() {
-        assertThat(dayOne.partTwo(), `is`(241861950))
+        assertThat(dayOne.partTwo(), `is`(1))
     }
 }
