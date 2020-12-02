@@ -32,13 +32,7 @@ class Day2 : Day(2) {
 
     override fun partTwo(): Any {
         return passwords.count { pw ->
-            val element1 = pw.password[pw.parameter1 - 1]
-            val element2 = pw.password[pw.parameter2 - 1]
-            when {
-                (element1 == element2) -> false
-                (element1 == pw.element || element2 == pw.element) -> true
-                else -> false
-            }
+            (pw.password[pw.parameter1 - 1] == pw.element) xor (pw.password[pw.parameter2 - 1] == pw.element)
         }
     }
 }
