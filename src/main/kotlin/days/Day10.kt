@@ -1,6 +1,8 @@
+package days
+
 import days.Day
 
-class Template : Day(0) {
+class Day10 : Day(10) {
 
     override fun partOne(): Any {
         return inputList.take(2)
