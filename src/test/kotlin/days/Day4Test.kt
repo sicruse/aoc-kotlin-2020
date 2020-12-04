@@ -10,11 +10,16 @@ class Day4Test {
 
     @Test
     fun testPartOne() {
-        assertThat(day.partOne(), `is`("Whatever is expected"))
+        assertThat(day.partOne(), `is`(2))
     }
 
-    @Test
-    fun testPartTwo() {
-        assertThat(day.partTwo(), `is`("Whatever is expected"))
-    }
+//    @Test
+//    fun testPartTwo_InvalidPassports() {
+//        assertThat(day.partTwo(), `is`(0 ))
+//    }
+
+//    @Test
+//    fun testPartTwo_ValidPassports() {
+//        assertThat(day.partTwo(), `is`(4 ))
+//    }
 }
