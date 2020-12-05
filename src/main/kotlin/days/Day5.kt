@@ -1,42 +1,48 @@
 package days
 
-import days.Day
 import kotlin.jvm.Throws
 
 class Day5 : Day(5) {
 
     // Seat Codes look like this
     // FBFBBFFRLR
-    // FBFBBFF    == 7 bit Row
-    //        RLR == 3 bit Column
+    // FBFBBFF    == First 7 characters represent the row number
+    //        RLR == Last 3 characters represent the column number
 
-    private val rowBits = 7
-    private val colBits = 3
+    private val rowSequenceLength = 7
+    private val rowLowerHalfCode = 'F'
+    private val rowUpperHalfCode = 'B'
 
-    private val rowLookup = Lookup(rowBits, 'F', 'B')
-    private val colLookup = Lookup(colBits, 'L', 'R')
+    private val colSequenceLength = 3
+    private val colLowerHalfCode = 'L'
+    private val colUpperHalfCode = 'R'
+
+    private val rowLookup = Lookup(rowSequenceLength, rowLowerHalfCode, rowUpperHalfCode)
+    private val colLookup = Lookup(colSequenceLength, colLowerHalfCode, colUpperHalfCode)
 
     private val seatIDs by lazy {
         inputList.map { seatCode ->
-            val row = rowLookup.search(seatCode.take(rowBits))
-            val col = colLookup.search(seatCode.drop(rowBits))
+            val row = rowLookup.search(seatCode.take(rowSequenceLength))
+            val col = colLookup.search(seatCode.takeLast(colSequenceLength))
             row * 8 + col
         }.sorted()
     }
 
     class Lookup(
-        private val bits: Int,
-        private val low: Char,
-        private val high: Char
+        private val sequenceLength: Int,
+        private val lowerHalfCode: Char,
+        private val upperHalfCode: Char
     ) {
         @Throws
-        fun search(code: String, lower: Int = 0, upper: Int = (1 shl bits) - 1): Int {
+        fun search(codeSequence: String, lower: Int = 0, upper: Int = (1 shl sequenceLength) - 1): Int {
             val mid = lower + (upper - lower + 1) / 2
             return when {
-                code.length == 1 && code.first() == low -> lower
-                code.length == 1 -> upper
-                code.first() == low -> search(code.drop(1), lower, mid - 1)
-                code.first() == high -> search(code.drop(1), mid, upper)
+                // final code in the sequence
+                codeSequence.length == 1 && codeSequence.first() == lowerHalfCode -> lower
+                codeSequence.length == 1 -> upper
+                // more to process
+                codeSequence.first() == lowerHalfCode -> search(codeSequence.drop(1), lower, mid - 1)
+                codeSequence.first() == upperHalfCode -> search(codeSequence.drop(1), mid, upper)
                 else -> throw IllegalArgumentException("Its all broken")
             }
         }
