@@ -37,21 +37,22 @@ class Day7 : Day(7) {
         }
     }
 
-    // Find the set of Bags
-    fun findBagsWhichContain(name: String): Set<String> {
-        val bagsWhichDirectlyContain = bags.filter { bag -> bag.value.any{ content -> content.name == name } }.keys.toSet()
+    // Find the set of Bags which contain the target bag
+    fun findBagsWhichContain(target: String): Set<String> {
+        val bagsWhichDirectlyContain = bags.filter { bag -> bag.value.any{ content -> content.name == target } }.keys.toSet()
         val bagsWhichIndirectlyContain = bagsWhichDirectlyContain.flatMap { bagName -> findBagsWhichContain( bagName ) }.toSet()
         return bagsWhichDirectlyContain.union(bagsWhichIndirectlyContain)
     }
 
-    fun findBagsRequired(name: String, num: Int): List<Pair<String,Int>> {
-        val target = bags[name]
-        val additionalBags = target?.flatMap { containedBag ->
-            findBagsRequired(containedBag.name, containedBag.quantity * num)
+    // Find the set of bags which must be packed in the target bag
+    fun findBagsRequired(target: String, num: Int): List<Pair<String,Int>> {
+        val rules = bags[target]
+        val additionalBags = rules?.flatMap { bag ->
+            findBagsRequired(bag.name, bag.quantity * num)
         }
         return when {
-            additionalBags == null -> listOf(Pair(name, num))
-            else -> listOf(Pair(name, num)) + additionalBags
+            additionalBags == null -> listOf(Pair(target, num))
+            else -> listOf(Pair(target, num)) + additionalBags
         }
     }
 
