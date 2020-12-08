@@ -59,8 +59,8 @@ class Day8 : Day(8) {
 
             yield(result)
         }
-        // Final result that indicates an exit code indicating that either the addressable range is exceeded or an infinite loop has been detected
-        yield(Result(address, acc, if (address >= prog.size) ExitCode.ADDRESS_EXCEEDS_BOUNDS else ExitCode.INFINITE_LOOP ))
+        // Indicate that the addressable range is exceeded as needed
+        if (address >= prog.size) yield(Result(address, acc, ExitCode.ADDRESS_EXCEEDS_BOUNDS ))
     }
 
     override fun partOne(): Any {
