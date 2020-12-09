@@ -10,11 +10,11 @@ class Day9Test {
 
     @Test
     fun testPartOne() {
-        assertThat(day.partOne(), `is`("Whatever is expected"))
+        assertThat(day.findWeakness(5), `is`(127L))
     }
 
     @Test
     fun testPartTwo() {
-        assertThat(day.partTwo(), `is`("Whatever is expected"))
+        assertThat(day.findExploit(127L), `is`(62))
     }
 }
