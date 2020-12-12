@@ -1,14 +1,6 @@
-# aoc-kotlin-starter
+# aoc-kotlin-2020
 
-Starter template for solving [Advent of Code](https://adventofcode.com) in [Kotlin](https://kotlinlang.org/)
-
-### Features
-
-* Gradle setup so you can run a specific day or all days on the command line (see **Running** below)
-* Timings for each part of each day
-* Input for each day automatically exposed in String and List form
-* Junit and Hamcrest test libraries included (see **Testing** below)
-* Starter .gitignore
+Solutions to the 2020 [Advent of Code](https://adventofcode.com) in [Kotlin](https://kotlinlang.org/)
 
 ### Running
 
