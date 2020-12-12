@@ -6,8 +6,6 @@ import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.math.cos
 
-fun Int.toRadian(): Double = this.toDouble() * Math.PI / 180
-
 class Day12 : Day(12) {
 
     private val course: List<ManouveringInstruction> by lazy {
@@ -57,7 +55,7 @@ class Day12 : Day(12) {
             override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
                 PositionWithHeading(Position(from.position.east, from.position.north), (360 + from.heading - inc) % 360 )
             override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int): Pair<Position, Position> {
-                val r = inc.toRadian()
+                val r = inc.toDouble() * Math.PI / 180
                 val s = sin(r)
                 val c = cos(r)
                 val north = (waypoint.east * s + waypoint.north * c).roundToInt()
@@ -69,7 +67,7 @@ class Day12 : Day(12) {
             override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
                 PositionWithHeading(Position(from.position.east, from.position.north), (from.heading + inc) % 360 )
             override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int): Pair<Position, Position> {
-                val r = -inc.toRadian()
+                val r = -inc.toDouble() * Math.PI / 180
                 val s = sin(r)
                 val c = cos(r)
                 val north = (waypoint.east * s + waypoint.north * c).roundToInt()
