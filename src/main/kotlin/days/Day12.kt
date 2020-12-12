@@ -1,10 +1,8 @@
 package days
 
-import kotlin.jvm.Throws
+import java.lang.IllegalArgumentException
+import kotlin.Throws
 import kotlin.math.absoluteValue
-import kotlin.math.roundToInt
-import kotlin.math.sin
-import kotlin.math.cos
 
 class Day12 : Day(12) {
 
@@ -28,73 +26,81 @@ class Day12 : Day(12) {
 
     enum class Maneuver {
         N {
-            override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
-                PositionWithHeading(Position(from.position.east, from.position.north + inc), from.heading )
-            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int) =
-                Pair( Position(waypoint.east, waypoint.north + inc), ship )
+            override fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading =
+                PositionWithHeading(Position(from.position.east, from.position.north + amount), from.heading )
+            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int) =
+                Pair( Position(waypoint.east, waypoint.north + amount), ship )
         },
         E {
-            override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
-                PositionWithHeading(Position(from.position.east + inc, from.position.north), from.heading )
-            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int) =
-                Pair( Position(waypoint.east + inc, waypoint.north), ship)
+            override fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading =
+                PositionWithHeading(Position(from.position.east + amount, from.position.north), from.heading )
+            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int) =
+                Pair( Position(waypoint.east + amount, waypoint.north), ship)
         },
         S {
-            override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
-                PositionWithHeading(Position(from.position.east, from.position.north - inc), from.heading )
-            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int) =
-                Pair( Position(waypoint.east, waypoint.north - inc), ship)
+            override fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading =
+                PositionWithHeading(Position(from.position.east, from.position.north - amount), from.heading )
+            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int) =
+                Pair( Position(waypoint.east, waypoint.north - amount), ship)
         },
         W {
-            override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
-                PositionWithHeading(Position(from.position.east - inc, from.position.north), from.heading )
-            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int) =
-                Pair( Position(waypoint.east - inc, waypoint.north), ship)
+            override fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading =
+                PositionWithHeading(Position(from.position.east - amount, from.position.north), from.heading )
+            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int) =
+                Pair( Position(waypoint.east - amount, waypoint.north), ship)
         },
         L {
-            override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
-                PositionWithHeading(Position(from.position.east, from.position.north), (360 + from.heading - inc) % 360 )
-            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int): Pair<Position, Position> {
-                val r = inc.toDouble() * Math.PI / 180
-                val s = sin(r)
-                val c = cos(r)
-                val north = (waypoint.east * s + waypoint.north * c).roundToInt()
-                val east = (waypoint.east * c - waypoint.north * s).roundToInt()
-                return Pair(Position(east, north), ship)
+            override fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading =
+                PositionWithHeading(Position(from.position.east, from.position.north), (360 + from.heading - amount) % 360 )
+            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int): Pair<Position, Position> {
+                return Pair(simpleRotateLeft(waypoint, amount), ship)
             }
         },
         R {
-            override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading =
-                PositionWithHeading(Position(from.position.east, from.position.north), (from.heading + inc) % 360 )
-            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int): Pair<Position, Position> {
-                val r = -inc.toDouble() * Math.PI / 180
-                val s = sin(r)
-                val c = cos(r)
-                val north = (waypoint.east * s + waypoint.north * c).roundToInt()
-                val east = (waypoint.east * c - waypoint.north * s).roundToInt()
-                return Pair(Position(east, north), ship)
+            override fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading =
+                PositionWithHeading(Position(from.position.east, from.position.north), (from.heading + amount) % 360 )
+            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int): Pair<Position, Position> {
+                return Pair(simpleRotateRight(waypoint, amount), ship)
             }
         },
         F {
-            override fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading {
-                val northInc = inc * when(from.heading) {
+            override fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading {
+                val northInc = amount * when(from.heading) {
                     0 -> 1
                     180 -> -1
                     else -> 0
                 }
-                val eastInc = inc * when(from.heading) {
+                val eastInc = amount * when(from.heading) {
                     90 -> 1
                     270 -> -1
                     else -> 0
                 }
                 return PositionWithHeading(Position(from.position.east + eastInc, from.position.north + northInc), from.heading )
             }
-            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int) =
-                Pair( waypoint, Position(ship.east + waypoint.east * inc, ship.north + waypoint.north * inc))
+            override fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int) =
+                Pair( waypoint, Position(ship.east + waypoint.east * amount, ship.north + waypoint.north * amount))
         };
 
-        abstract fun maneuverShip(from: PositionWithHeading, inc: Int): PositionWithHeading
-        abstract fun maneuverShipByWaypoint(waypoint: Position, ship: Position, inc: Int): Pair<Position, Position>
+        @Throws
+        protected fun simpleRotateLeft(input: Position, amount: Int): Position =
+            when (amount) {
+                90 -> Position(-input.north, input.east)
+                180 -> Position(-input.east, -input.north)
+                270 -> Position(input.north, -input.east)
+                else -> throw IllegalArgumentException("Bad rotation angle...")
+            }
+
+        @Throws
+        protected fun simpleRotateRight(input: Position, amount: Int): Position =
+            when (amount) {
+                90 -> Position(input.north, -input.east)
+                180 -> Position(-input.east, -input.north)
+                270 -> Position(-input.north, input.east)
+                else -> throw IllegalArgumentException("Bad rotation angle...")
+            }
+
+        abstract fun maneuverShip(from: PositionWithHeading, amount: Int): PositionWithHeading
+        abstract fun maneuverShipByWaypoint(waypoint: Position, ship: Position, amount: Int): Pair<Position, Position>
     }
 
     private fun navigate(course: List<ManouveringInstruction>): Sequence<PositionWithHeading> = sequence {
