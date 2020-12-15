@@ -8,13 +8,13 @@ class Day14Test {
 
     private val day = Day14()
 
-    @Test
-    fun testPartOne() {
-        assertThat(day.partOne(), `is`(0 ))
-    }
-
 //    @Test
-//    fun testPartTwo() {
-//        assertThat(day.partTwo(), `is`(0 ))
+//    fun testPartOne() {
+//        assertThat(day.partOne(), `is`(165L ))
 //    }
+
+    @Test
+    fun testPartTwo() {
+        assertThat(day.partTwo(), `is`(208L ))
+    }
 }
