@@ -9,11 +9,11 @@ class Day15 : Day(15) {
     }
 
     val spoken: Sequence<Int> = sequence {
-        val history = mutableMapOf<Int, MutableList<Int>>()
+        val history = mutableMapOf<Int, List<Int>>()
         var turn = 1
         var current:Int? = null
         while(true) {
-            if (current == null || turn <= numbers.size) {
+            if (turn <= numbers.size) {
                 // We are in the preamble of the game, just read from our input list
                 current = numbers[turn - 1]
             } else {
@@ -22,16 +22,18 @@ class Day15 : Day(15) {
                 if (lastTime.size == 1) {
                     current = 0
                 } else {
-                    val plays = lastTime.takeLast(2)
+                    val plays = lastTime
                     current = plays.last() - plays.first()
                 }
             }
 
             // Update the history
-            if (history[current] == null)
-                history[current] = mutableListOf(turn)
-            else
-                history[current]!!.add(turn)
+            val plays = history[current]
+            if (plays == null)
+                history[current] = listOf(turn)
+            else {
+                history[current] = listOf(plays.last(), turn)
+            }
 
             yield(current)
             turn++
@@ -39,14 +41,10 @@ class Day15 : Day(15) {
     }
 
     override fun partOne(): Any {
-        val result = spoken.elementAt(2020 - 1)
-
-        return result
+        return spoken.elementAt(2020 - 1)
     }
 
     override fun partTwo(): Any {
-        val result = spoken.elementAt(30000000 - 1)
-
-        return result
+        return spoken.elementAt(30000000 - 1)
     }
 }
