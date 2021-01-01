@@ -129,9 +129,7 @@ class Day20 : Day(20) {
             body = bodyFromText(text.split(":\n").last())
         )
 
-        override fun toString(): String =
-            id.toString() + ":\n" +
-                    super.toString()
+        override fun toString(): String = id.toString() + ":\n" + super.toString()
 
         fun matchingBordersIn(tiles: List<Tile>): Int =
             originalBorders()
