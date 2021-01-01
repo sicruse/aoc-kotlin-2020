@@ -1,9 +1,5 @@
 package days
 
-import java.lang.IndexOutOfBoundsException
-import java.util.*
-import kotlin.jvm.Throws
-
 class Day20 : Day(20) {
 
     private val tiles: List<Tile> by lazy {
@@ -205,16 +201,16 @@ class Day20 : Day(20) {
             )
 
             @Throws
-            fun assembleImageFromTiles(tiles: List<Tile>, corner: Tile): Array<CharArray> {
+            private fun assembleImageFromTiles(tiles: List<Tile>, corner: Tile): Array<CharArray> {
                 // Note that if we have more tiles in the input than dumbSQRT supports we will halt here!
                 val width = dumbSQRT[tiles.count()]
-                    ?: throw IndexOutOfBoundsException("More tiles in input than dumbSQRT supports!")
+                    ?: throw IndexOutOfBoundsException("More tiles in input than dumbSQRT supports")
 
                 // Start by orienting the corner tile
                 val orientation = corner.orientCorner(Corner.TopLeft, tiles)
-                assert(orientation != null)
+                    ?: throw IllegalArgumentException("No corner detected in supplied data")
 
-                var currentTile = Pair(corner, orientation!!)
+                var currentTile = Pair(corner, orientation)
                 var rowHeader = currentTile
 
                 // Loop through seeking to orient tiles to each others edges
@@ -225,16 +221,13 @@ class Day20 : Day(20) {
                                 row == 0 && col == 0 -> {
                                 }
                                 col == 0 -> {
-                                    rowHeader =
-                                        rowHeader.first.findAndOrientNeighbor(Border.Bottom, rowHeader.second, tiles)!!
+                                    rowHeader = rowHeader.first.findAndOrientNeighbor(Border.Bottom, rowHeader.second, tiles)
+                                        ?: throw IllegalArgumentException("No row header neighbor detected in supplied data")
                                     currentTile = rowHeader
                                 }
                                 else -> {
-                                    currentTile = currentTile.first.findAndOrientNeighbor(
-                                        Border.Right,
-                                        currentTile.second,
-                                        tiles
-                                    )!!
+                                    currentTile = currentTile.first.findAndOrientNeighbor(Border.Right, currentTile.second, tiles)
+                                        ?: throw IllegalArgumentException("No row body neighbor detected in supplied data")
                                 }
                             }
                             currentTile.first.orientations.elementAt(currentTile.second).borderless
