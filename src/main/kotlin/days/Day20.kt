@@ -288,8 +288,8 @@ class Day20 : Day(20) {
         // Use the monster mask to transform all possible variants of the satellite image
         val monster =
             "                  # \n" +
-                    "#    ##    ##    ###\n" +
-                    " #  #  #  #  #  #   "
+            "#    ##    ##    ###\n" +
+            " #  #  #  #  #  #   "
         val mask = ImageMask(monster)
         val images = image.orientations.map { variant -> SatelliteImage(mask.applyTo(variant)) }
 
