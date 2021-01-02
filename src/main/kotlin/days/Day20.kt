@@ -23,11 +23,11 @@ class Day20 : Day(20) {
         private val bottom = body.last().joinToString("")
         private val left = body.map { row -> row.first() }.joinToString("")
 
-        fun allBorders(): Set<String> = originalBorders() + reversedBorders()
-        fun originalBorders(): Set<String> = setOf(top, left, bottom, right)
-        fun hasBorder(pattern: String): Boolean = pattern in allBorders()
+        val allBorders: Set<String> by lazy { originalBorders + reversedBorders }
+        val originalBorders: Set<String> by lazy { setOf(top, left, bottom, right) }
+        private val reversedBorders: Set<String> = originalBorders.map { it.reversed() }.toSet()
 
-        private fun reversedBorders(): Set<String> = originalBorders().map { it.reversed() }.toSet()
+        fun hasBorder(pattern: String): Boolean = pattern in allBorders
 
         enum class Border {
             Top, Right, Bottom, Left;
@@ -132,7 +132,7 @@ class Day20 : Day(20) {
         override fun toString(): String = id.toString() + ":\n" + super.toString()
 
         fun matchingBordersIn(tiles: List<Tile>): Int =
-            originalBorders()
+            originalBorders
                 .sumOf { side ->
                     tiles
                         .filterNot { tile -> tile.id == id }
@@ -144,7 +144,7 @@ class Day20 : Day(20) {
             val otherTiles = tiles.filterNot { it.id == this.id }
 
             // Determine whole border set for remaining tiles
-            val allBorders = otherTiles.fold(emptySet<String>()) { acc, tile -> acc + tile.allBorders() }
+            val allBorders = otherTiles.fold(emptySet<String>()) { acc, tile -> acc + tile.allBorders }
 
             // Determine if we have an orientation that will place us as the corner tile
             // and return the orientation index
@@ -162,7 +162,7 @@ class Day20 : Day(20) {
             val borderPattern = orientations.elementAt(myOrientation).border(myBorder)
 
             // Identify any tile that has a matching border
-            val match = otherTiles.firstOrNull { tile -> tile.allBorders().contains(borderPattern) }
+            val match = otherTiles.firstOrNull { tile -> tile.allBorders.contains(borderPattern) }
                 ?: return null
 
             // figure out the appropriate tile orientation for matching neighbor

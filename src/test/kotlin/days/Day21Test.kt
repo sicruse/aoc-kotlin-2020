@@ -10,11 +10,11 @@ class Day21Test {
 
     @Test
     fun testPartOne() {
-        assertThat(day.partOne(), `is`(0 ))
+        assertThat(day.partOne(), `is`(5 ))
     }
 
-//    @Test
-//    fun testPartTwo() {
-//        assertThat(day.partTwo(), `is`(0 ))
-//    }
+    @Test
+    fun testPartTwo() {
+        assertThat(day.partTwo(), `is`("mxmxvkd,sqjhc,fvjkl" ))
+    }
 }
