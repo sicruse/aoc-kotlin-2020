@@ -41,7 +41,7 @@ class Day21 : Day(21) {
                         .mapNotNull{ (ingredients, allergens) ->
                             if (allergen in allergens) ingredients - safeIngredients else null
                         }
-                        .reduce { remainingIngredients, ingredient -> remainingIngredients intersect ingredient }
+                        .reduce { remainingIngredients, ingredients -> ingredients intersect remainingIngredients }
                         .toMutableSet()
                 allergen to possibleIngredients
             }.toMap().toMutableMap()
